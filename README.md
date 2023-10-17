@@ -13,20 +13,17 @@ Based on the learned from theoretical classes, the seminars, the lab exercises a
 
 ## Project Instructions
 ### Part 1:
-En esta parte del proyecto encontrareis los primeros pasos. Entre ellos, la importación de los diferentes elementos que se usaran en el proyecto, dichos documentos se encuentran en la carpeta Data. Además, se ha relizado un proceso de limpieza de los carácteres de los tweets utilizando la función preprocess(). Para una mayor facilidad a la hora de estudiar los datos, también se ha realizado un cambio en el formato de las fechas, a partir de preprocess_date(). 
+In this part of the project, you will find the initial steps. Among them, the importation of the different elements that will be used in the project, these documents are located in the Data folder. Furthermore, a character cleaning process for the tweets has been performed using the preprocess() function. For easier data analysis, a date format change has also been applied using preprocess_date().
 
-A continuación, en el segundo apartado hemos aplicado una serie de estudios para conocer más los datos. Algunos de los estudios son: Word cloud, Histograma, Boxplot, ... El resultado obtenido de dichos estudios se puede observar aquí.
+Next, in the second section, we have conducted a series of studies to better understand the data. Some of the studies include: Word cloud, Histogram, Boxplot, ... The results of these studies can be observed [here](https://github.com/ialexmp/IRWA/blob/master/part-1/IRWA-2023-u189626-u186665-u186661-part-1.pdf)
 
-Por último, comentar que para ejecutarlo simplemente se han de ejecutar en orden cada una de las celdas.
+Finally, it's worth mentioning that to execute this, you simply need to run each of the cells in order.
 
 ### Part 2:
-instructions about how to run the code and how to select the different functions, algorithms
-and/or other options to run the ranking scores.
+[In process...]
 
 ### Part 3:
-instructions about how to run the code and how to select the different functions, algorithms
-and/or other options to run the ranking scores.
+[In process...]
 
 ### Part 4: 
-instructions about how to run the code and how to select the different functions, algorithms
-and/or other options to run the ranking scores.
+[In process...]
