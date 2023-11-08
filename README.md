@@ -27,7 +27,11 @@ A search engine, "search," is built to retrieve tweets for specific queries usin
 The results of these studies can be observed [here](https://github.com/ialexmp/IRWA/blob/master/part-2/IRWA-2023-u189626-u186665-u186661-part-2.pdf).
 
 ### Part 3:
-[In process...]
+In this section, we explored diverse methods for document retrieval and scoring. We started with TF-IDF and cosine similarity, a traditional approach that assesses document relevance based on term frequency and inverse document frequency. We then introduced Our-Score, which incorporates social media engagement metrics (retweets and likes) to better align with the context of social media content ranking. The comparison revealed that Our-Score can unearth more relevant social media content. 
+
+Additionally, we experimented with Word2Vec embeddings, leveraging semantic understanding, and discussed the potential benefits and challenges of transformer-based embedding.
+
+The results of these studies can be observed [here](https://github.com/ialexmp/IRWA/blob/master/part-3/IRWA-2023-u189626-u186665-u186661-part-3.pdf).
 
 ### Part 4: 
 [In process...]
