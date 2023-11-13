@@ -29,7 +29,7 @@ app = Flask(__name__)
 # random 'secret_key' is used for persisting data in secure cookie
 app.secret_key = 'afgsreg86sr897b6st8b76va8er76fcs6g8d7'
 # open browser dev tool to see the cookies
-app.session_cookie_name = 'IRWA_SEARCH_ENGINE'
+app.config['SESSION_COOKIE_NAME'] = 'IRWA_SEARCH_ENGINE'
 
 # instantiate our search engine
 search_engine = SearchEngine()
