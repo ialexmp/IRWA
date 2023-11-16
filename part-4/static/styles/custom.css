@@ -22,12 +22,12 @@
 .btn-primary:not(:disabled):not(.disabled):active {
     /*color: #ffffff;*/
     background-color: #c8102e;
-    border-color: #c8102e;
+    border-color: black;
 }
 
 
 .header {
-    font-size: 1.7em;
+    font-size: 2.0em;
     margin-inline-start: 0px;
     margin-inline-end: 0px;
     font-weight: bold;
