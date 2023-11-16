@@ -1,6 +1,7 @@
 import random
 
 from myapp.search.objects import ResultItem, Document
+from myapp.search.algorithms import search_in_corpus
 
 
 def build_demo_results(corpus: dict, search_id):
@@ -29,14 +30,24 @@ def build_demo_results(corpus: dict, search_id):
 class SearchEngine:
     """educational search engine"""
 
-    def search(self, search_query, search_id, corpus):
+    def search(self, search_query, search_id, corpus, index, tf, idf):
         print("Search query:", search_query)
 
         results = []
         ##### your code here #####
-        results = build_demo_results(corpus, search_id)  # replace with call to search algorithm
-
-        # results = search_in_corpus(search_query)
+        # results = build_demo_results(corpus, search_id)  # replace with call to search algorithm
+        results = search_in_corpus(corpus, search_query, index, tf, idf)
+        
         ##### your code here #####
-
-        return results
+        documents = []
+        for _, id in results:
+            try:
+                index = int(id)
+                document = corpus[index]
+                documents.append(document)
+            except (ValueError, IndexError):
+                print(f"Invalid index: {id}")
+        
+        return [ResultItem(item.id, item.title, item.description, item.doc_date,
+                                "doc_details?id={}&search_id={}&param2=2".format(item.id, search_id), score)
+                        for item, (score, _) in zip(documents, results)]
