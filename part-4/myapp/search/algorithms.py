@@ -14,7 +14,7 @@ custom_stopwords = set(stopwords.words('english'))
 
 def search_in_corpus(corpus: dict, query, index, tf, idf):
     # 1. create create_tfidf_index
-    # DONE IN WEB_APP FOR FASTER EXECUTION
+    # DONE IN web_app FOR FASTER EXECUTION
 
     # 2. apply ranking
     ranked_tweets = search_tf_idf(query, index, tf, idf)
