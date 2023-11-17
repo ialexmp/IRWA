@@ -1,3 +1,7 @@
+{% extends "base.html" %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,5 +15,7 @@
 <div><a href="#" onclick="history.go(-4)">Go Back 4 pages</a></div>
 <div><a href="/stats" >Stats</a></div>
 <div><a href="/dashboard" >Dashboard</a></div>
+<div><a href="/sentiment" >Sentiment</a></div>
 </body>
 </html>
+{% endblock %}
