@@ -5,10 +5,35 @@
     {# Using Bootstrap v4.6.1 #}
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/custom.css') }}">
-    <title>{% block page_title %}{% endblock %} IRWA Search Engine </title>
+    <style>
+        .navbar {
+            overflow: hidden;
+            background-color: #595959;
+            height: 40px;
+            margin-bottom: 10px;
+        }
+        
+        .navbar a {
+            display: block;
+            color: #f2f2f2;
+            padding: 0px 0px;
+            font-weight: bold;
+            text-decoration:none;
+        }
+        
+        .navbar a:hover {
+            background-color: #ddd;
+            color: black;
+            weight: 40px;
+            padding: 0px 0px;
+        }
+        
+    </style>
+    <title>{% block page_title %}{% endblock %} - IRWA Search Engine </title>
     {% block header %}{% endblock %}
 </head>
 <body>
+    
 <div class="container">
     <div class='header text-center'>
         <a href="/"><img src="{{ url_for('static', filename='logo.png') }}" width="100" alt="UPF logo"/></a>
@@ -16,6 +41,13 @@
     </div>
     <hr>
     <div class='content'>
+        <div class="navbar">
+            <a href="/">Search</a>
+            <a href="/stats">Stats</a>
+            <a href="/sentiment">Sentiment</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/session">Session</i></a>
+        </div>
         {% block content %}
             base
         {% endblock %}
