@@ -42,4 +42,16 @@
 </div>
 </body>
 </html>
+<h4>Clicked docs:</h4>
+    <h6>(Here you have the clicked docs, you can copy them to see which is the sentiment of the tweet)</h6>
+    {% for doc in clicks_data %}
+        <div class="pb-3">
+            <div class="">
+                <span class="text-dark"> ({{ doc.count }} visits) </span> — id: {{ doc.id }} — {{ doc.description }}
+                <a> hi </a>
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+
 {% endblock %}

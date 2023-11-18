@@ -1,5 +1,13 @@
 {% extends "base.html" %}
 {% block page_title %}{{ page_title }}{% endblock %}
+
+{% block header %}
+    <!-- Next tag loads Charts.js https://www.chartjs.org/docs/latest/ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.6.2/chart.min.js"
+            integrity="sha512-tMabqarPtykgDtdtSqCL3uLVM0gS1ZkUAVhRFu1vSEFgvB73niFQWJuvviDyBGBH22Lcau4rHB5p2K2T0Xvr6Q=="
+            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+{% endblock %}
+
 {% block content %}
     <h2>Quick Stats</h2>
     <h4>Clicked docs:</h4>
@@ -12,4 +20,54 @@
         </div>
         <hr>
     {% endfor %}
+
+
+    <script>
+        const visits_list = {{ visited_docs | tojson | safe }};
+        console.log("visited docs: ")
+        console.log(visits_list)
+    </script>
+
+    <h4>Ranking of Visited Documents</h4>
+    <canvas id="dailyVisits" width="400" height="400"></canvas>
+
+
+    <script>
+        const visitsLabels = visits_list.map(a => "id: " + a.doc_id);
+        const visitsData = visits_list.map(a => a.counter);
+        const chartData1 = {
+            labels: visitsLabels,
+            datasets: [{
+                label: 'Visits count',
+                data: visitsData,
+                fill: false,
+                borderColor: 'rgb(75, 192, 192)',
+                tension: 0.1
+            }]
+        };
+
+        const ctx = document.getElementById('dailyVisits').getContext('2d');
+
+        const myChart = new Chart(ctx, {
+            type: 'line',
+            data: chartData1,
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+    </script>
+
+    <br>
+    <hr>
+    <h4>WordCloud </h4>
+    {% if wordcloud is defined %}
+        <img style=text-align:center src="data:image/png;base64,{{ wordcloud }}" alt="Wordcloud">
+    {%else%}
+        <h6>The WordCloud will be displayed when you search some query.</h6>
+    {%endif%}
 {% endblock %}

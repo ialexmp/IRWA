@@ -156,7 +156,6 @@ def stats():
     """
 
     docs = []
-    # ### Start replace with your code ###
 
     for doc_id in analytics_data.fact_clicks:
         row: Document = corpus[int(doc_id)]
@@ -166,8 +165,32 @@ def stats():
 
     # simulate sort by ranking
     docs.sort(key=lambda doc: doc.count, reverse=True)
-    return render_template('stats.html', clicks_data=docs)
-    # ### End replace with your code ###
+    
+    # Dashboard
+    visited_docs = []
+    print(analytics_data.fact_clicks.keys())
+    for doc_id in analytics_data.fact_clicks.keys():
+        d: Document = corpus[int(doc_id)]
+        doc = ClickedDoc(doc_id, d.description, analytics_data.fact_clicks[doc_id])
+        visited_docs.append(doc)
+
+    # simulate sort by ranking
+    visited_docs.sort(key=lambda doc: doc.counter, reverse=True)
+    visited=[]
+    for doc in visited_docs:
+        visited.append(doc.to_json())
+    
+    if (len(search_queries) != 0):
+        queries = ' '.join(search_queries)
+        wordcloud = WordCloud(background_color='white', colormap='viridis').generate(queries)
+        word_cloud = wordcloud.to_image()
+        buffered = BytesIO()
+        word_cloud.save(buffered, format="PNG")
+        word_cloud = base64.b64encode(buffered.getvalue()).decode()    
+        return render_template('stats.html', clicks_data=docs, visited_docs=visited, wordcloud=word_cloud)
+    else:
+        return render_template('stats.html', clicks_data=docs, visited_docs=visited)
+    
 
 
 @app.route('/dashboard', methods=['GET'])
@@ -189,7 +212,18 @@ def dashboard():
 
 @app.route('/sentiment')
 def sentiment_form():
-    return render_template('sentiment.html')
+    docs = []
+
+    for doc_id in analytics_data.fact_clicks:
+        row: Document = corpus[int(doc_id)]
+        count = analytics_data.fact_clicks[doc_id]
+        doc = StatsDocument(row.id, row.title, row.description, row.doc_date, row.url, count)
+        docs.append(doc)
+
+    # simulate sort by ranking
+    docs.sort(key=lambda doc: doc.count, reverse=True)
+    
+    return render_template('sentiment.html', clicks_data=docs)
 
 
 @app.route('/sentiment', methods=['POST'])
@@ -199,7 +233,19 @@ def sentiment_form_post():
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     sid = SentimentIntensityAnalyzer()
     score = ((sid.polarity_scores(str(text)))['compound'])
-    return render_template('sentiment.html', score=score)
+    
+    docs = []
+
+    for doc_id in analytics_data.fact_clicks:
+        row: Document = corpus[int(doc_id)]
+        count = analytics_data.fact_clicks[doc_id]
+        doc = StatsDocument(row.id, row.title, row.description, row.doc_date, row.url, count)
+        docs.append(doc)
+
+    # simulate sort by ranking
+    docs.sort(key=lambda doc: doc.count, reverse=True)
+    
+    return render_template('sentiment.html', score=score, clicks_data=docs)
 
 
 @app.route('/session', methods=['GET'])
@@ -208,13 +254,21 @@ def session_function():
     user_ip = request.remote_addr
     agent = httpagentparser.detect(user_agent)
     user = Session_IP(user_ip, agent)
-    queries = ' '.join(search_queries)
-    wordcloud = WordCloud(background_color='white', colormap='viridis').generate(queries)
-    word_cloud = wordcloud.to_image()
-    buffered = BytesIO()
-    word_cloud.save(buffered, format="PNG")
-    word_cloud = base64.b64encode(buffered.getvalue()).decode()    
-    return render_template('session.html', user=user, history=search_queries, wordcloud=word_cloud)
+    
+    frequency = {}
+    for query in search_queries:
+        frequency[query] = frequency.get(query, 0) + 1
+    
+    if (len(search_queries) != 0):
+        queries = ' '.join(search_queries)
+        wordcloud = WordCloud(background_color='white', colormap='viridis').generate(queries)
+        word_cloud = wordcloud.to_image()
+        buffered = BytesIO()
+        word_cloud.save(buffered, format="PNG")
+        word_cloud = base64.b64encode(buffered.getvalue()).decode()    
+        return render_template('session.html', user=user, history=search_queries, frequency=frequency, wordcloud=word_cloud)
+    else:
+        return render_template('session.html', user=user, history=search_queries, frequency=frequency)
 
 if __name__ == "__main__":
     app.run(port=8088, host="0.0.0.0", threaded=False, debug=True)

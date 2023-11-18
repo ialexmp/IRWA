@@ -2,7 +2,7 @@
 {% block page_title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<h5>Session</h5>
+<h4>Session</h4>
     <p style=text-align:center> <b> IP: </b> {{user.ip}} <b> — Platform: </b> {{user.platform}} <b>- Browser: </b> {{user.browser}} </p>
     <p><b> Queries Done:</b> 
     {% for query in history %}
@@ -13,5 +13,53 @@
         {% endif %}
     {% endfor %}
     </p>
-    <img src="data:image/png;base64,{{ wordcloud }}" alt="Wordcloud">
+    <br>
+    <hr>
+    <h4>WordCloud </h4>
+    {% if wordcloud is defined %}
+        <img style=text-align:center src="data:image/png;base64,{{ wordcloud }}" alt="Wordcloud">
+    {%else%}
+        <h6>The WordCloud will be displayed when you search some query.</h6>
+    {%endif%}
+
+    <br>
+    <hr>
+    <h4>Frequency of the queries </h4>
+        <!DOCTYPE html>
+            <html lang="es">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Histograma de Palabras</title>
+                <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            </head>
+            <body>
+                <canvas id="myChart" width="400" height="200"></canvas>
+
+                <script>
+                    var frequency_queries = {{frequency | tojson | safe}};
+
+                    var words = Object.keys(frequency_queries);
+                    var frequencies = Object.values(frequency_queries);
+
+                    var ctx = document.getElementById('myChart').getContext('2d');
+
+                    var myChart = new Chart(ctx, {
+                        type: 'bar',
+                        data: {
+                            labels: words,
+                            datasets: [{
+                                label: 'Frecueny',
+                                data: frequencies,
+                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                borderColor: 'rgba(75, 192, 192, 1)',
+                                borderWidth: 1
+                            }]
+                        }
+                    });
+                </script>
+            </body>
+            </html>
+
+    
 {% endblock %}
