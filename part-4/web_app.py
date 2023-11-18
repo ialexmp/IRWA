@@ -1,6 +1,7 @@
 import os
 from json import JSONEncoder
 import json
+import pickle
 
 # pip install httpagentparser
 import httpagentparser  # for getting the user agent as json
@@ -10,7 +11,7 @@ from flask import request
 
 from myapp.analytics.analytics_data import AnalyticsData, ClickedDoc
 from myapp.search.load_corpus import load_corpus
-from myapp.search.objects import Document, StatsDocument
+from myapp.search.objects import Document, StatsDocument, Session_IP
 from myapp.search.search_engine import SearchEngine
 from myapp.search.algorithms import create_index
 
@@ -51,7 +52,27 @@ file_path = path + "/Rus_Ukr_war_data.json"
 corpus = load_corpus(file_path)
 print("loaded corpus. first elem:", list(corpus.values())[0])
 
-index_tf_idf, tf, idf = create_index(corpus)
+archivo_index_tf_idf = path + '/index_tf_idf.pkl'
+archivo_tf = path + '/tf.pkl'
+archivo_idf = path + '/idf.pkl'
+
+if os.path.exists(archivo_index_tf_idf) and os.path.exists(archivo_tf) and os.path.exists(archivo_idf):
+    with open(archivo_index_tf_idf, 'rb') as archivo:
+        index_tf_idf = pickle.load(archivo)
+    with open(archivo_tf, 'rb') as archivo:
+        tf = pickle.load(archivo)
+    with open(archivo_idf, 'rb') as archivo:
+        idf = pickle.load(archivo)
+else:
+    index_tf_idf, tf, idf = create_index(corpus)
+    with open(archivo_index_tf_idf, 'wb') as archivo:
+        pickle.dump(index_tf_idf, archivo)
+    with open(archivo_tf, 'wb') as archivo:
+        pickle.dump(tf, archivo)
+    with open(archivo_idf, 'wb') as archivo:
+        pickle.dump(idf, archivo)
+
+search_queries = []
 
 # Home URL "/"
 @app.route('/')
@@ -78,7 +99,7 @@ def index():
 @app.route('/search', methods=['POST'])
 def search_form_post():
     search_query = request.form['search-query']
-
+    search_queries.append(search_query)
     session['last_search_query'] = search_query
 
     search_id = analytics_data.save_query_terms(search_query)
@@ -87,7 +108,7 @@ def search_form_post():
 
     found_count = len(results)
     session['last_found_count'] = found_count
-
+    
     print(session)
 
     return render_template('results.html', results_list=results, page_title="Results", found_counter=found_count)
@@ -118,8 +139,10 @@ def doc_details():
         analytics_data.fact_clicks[clicked_doc_id] = 1
 
     print("fact_clicks count for id={} is {}".format(clicked_doc_id, analytics_data.fact_clicks[clicked_doc_id]))
+    
+    tweet: Document = corpus[int(clicked_doc_id)]
 
-    return render_template('doc_details.html')
+    return render_template('doc_details.html', tweet=tweet)
 
 
 @app.route('/stats', methods=['GET'])
@@ -175,6 +198,14 @@ def sentiment_form_post():
     score = ((sid.polarity_scores(str(text)))['compound'])
     return render_template('sentiment.html', score=score)
 
+
+@app.route('/session', methods=['GET'])
+def session_function():
+    user_agent = request.headers.get('User-Agent')
+    user_ip = request.remote_addr
+    agent = httpagentparser.detect(user_agent)
+    user = Session_IP(user_ip, agent)
+    return render_template('session.html', user=user, history=search_queries)
 
 if __name__ == "__main__":
     app.run(port=8088, host="0.0.0.0", threaded=False, debug=True)

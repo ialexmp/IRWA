@@ -54,3 +54,33 @@ class ResultItem:
         self.doc_date = doc_date
         self.url = url
         self.ranking = ranking
+        
+class Session_IP:
+    """
+    Original corpus data as an object
+    """
+
+    def __init__(self, user_ip, adress):
+        self.ip = user_ip
+        self.platform = adress["platform"]["name"] + " " + adress["platform"]["version"]
+        self.browser = adress["browser"]["name"]
+
+    def __str__(self):
+        """
+        Print the object content as a JSON string
+        """
+        return json.dumps(self)
+    
+class Session_History:
+    """
+    Original corpus data as an object
+    """
+
+    def __init__(self, session):
+        self.session = session
+
+    def __str__(self):
+        """
+        Print the object content as a JSON string
+        """
+        return json.dumps(self)

@@ -18,8 +18,7 @@ def search_in_corpus(corpus: dict, query, index, tf, idf):
 
     # 2. apply ranking
     ranked_tweets = search_tf_idf(query, index, tf, idf)
-    
-    print(ranked_tweets[:10], "\n\n\n")
+    # ranked_tweets = our_search(corpus, query, index, tf, idf)
     
     return ranked_tweets
 
@@ -83,6 +82,45 @@ def rank_tweets(terms, tweets, ourindex, idf, tf):
     if len(result_tweets) == 0:
         print("No results found, try again")
     return tweet_scores
+
+def our_search(corpus, query, index, idf, tf):
+    query = preprocess(query)
+    tweets = set()
+    for each_query in query.split(" "):
+        try:
+            query_tweet=[posting[0] for posting in index[each_query]]
+            tweets = tweets.union(query_tweet)
+        except:
+            pass
+    tweets = list(tweets)
+    ranked_tweets = rank_tweets2(corpus, query, tweets, index, idf, tf)
+    return ranked_tweets
+
+def rank_tweets2(df, terms, tweets, index, idf, tf):
+    terms = terms.split(" ")
+    tweet_vectors = defaultdict(lambda: [0] * len(terms)) 
+    query_vector = [0] * len(terms)
+    query_terms_count = collections.Counter(terms)
+    query_norm = la.norm(list(query_terms_count.values()))
+    min_likes = min(np.log(df["Likes"]+1))
+    den_likes = max(np.log(df["Likes"]+1)) - min(np.log(df["Likes"]+1))
+    min_rt = min(np.log(df["Retweets"]+1))
+    den_rt = max(np.log(df["Retweets"]+1)) - min(np.log(df["Retweets"]+1))
+    for termIndex, term in enumerate(terms):
+        if term not in index:
+            continue
+        query_vector[termIndex] =  query_terms_count[term] / query_norm * idf[term]
+        for row_tweet, (tweet, postings) in enumerate(index[term]):
+            if tweet in tweets:
+                rt = np.log(df["Retweets"][int(tweet.split("_")[1])-1]+1)
+                likes = np.log(df["Likes"][int(tweet.split("_")[1])-1]+1)
+                tweet_vectors[tweet][termIndex] = tf[term][row_tweet] * idf[term] + (((likes-min_likes)/den_likes*0.15) + ((rt-min_rt)/den_rt* 0.3))
+    tweet_scores=[[np.dot(curTweetVec, query_vector), tweet] for tweet, curTweetVec in tweet_vectors.items() ]
+    tweet_scores.sort(reverse=True)
+    result_tweets = [x[1] for x in tweet_scores]
+    if len(result_tweets) == 0:
+        print("No results found, try again")
+    return result_tweets
 
 def preprocess(text):
     # Convert text to lowercase

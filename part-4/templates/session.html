@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block page_title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+<h5>Session</h5>
+    <p style=text-align:center> <b> IP: </b> {{user.ip}} <b> — Platform: </b> {{user.platform}} <b>- Browser: </b> {{user.browser}} </p>
+    <p><b> History:</b> 
+    {% for query in history %}
+        {{query}},
+    {% endfor %}
+    </p>
+{% endblock %}
