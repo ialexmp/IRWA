@@ -5,6 +5,10 @@
     <hr>
     {% for item in results_list %}
         <div class="pb-3">
+            <div style="display:block ruby">
+                <img src="{{ item.profile_pic }}" style="border-radius: 50%; width: 30px;">
+                <p> {{item.username}}</p>
+            </div>
             <div class="doc-title">
                 <a href="{{ item.url }}">{{ item.title }}...
                 </a>
@@ -13,7 +17,7 @@
                 <cite> <a href="{{ item.url }}">{{ item.url }}</a></cite>
             </div>
             <div class="doc-desc">
-                {{ item.doc_date }} — {{ item.description }}
+                <span style=color:#6A6B6D>{{ item.doc_date }}</span> — <span style=color:#8C8F93 >{{ item.description }}</span>
             </div>
 
         </div>

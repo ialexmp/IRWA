@@ -11,12 +11,11 @@
             background-color: #595959;
             height: 40px;
             margin-bottom: 10px;
+            flex-wrap: nowrap;
         }
         
         .navbar a {
-            display: block;
             color: #f2f2f2;
-            padding: 0px 0px;
             font-weight: bold;
             text-decoration:none;
         }
@@ -24,11 +23,10 @@
         .navbar a:hover {
             background-color: #ddd;
             color: black;
-            weight: 40px;
-            padding: 0px 0px;
+            padding: inherit;
         }
-        
     </style>
+    
     <title>{% block page_title %}{% endblock %} IRWA Search Engine </title>
     {% block header %}{% endblock %}
 </head>

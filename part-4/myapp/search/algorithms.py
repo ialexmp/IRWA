@@ -13,28 +13,29 @@ import pandas as pd
 stemmer = nltk.stem.SnowballStemmer('english')
 custom_stopwords = set(stopwords.words('english'))
 
-def search_in_corpus(corpus: dict, query, index, tf, idf):
+def search_in_corpus(corpus: dict, query, index, tf, idf, search_option):
     # 1. create create_tfidf_index
     # DONE IN web_app FOR FASTER EXECUTION
 
     # 2. apply ranking
-    ranked_tweets = search_tf_idf(query, index, tf, idf)
-
-    corpus_df = pd.DataFrame(columns=["Id", "Title", "Tweet", "Date", "Likes", "Retweets", "Url"])
-    for i in range(len(list(corpus.values()))):
-        data_to_append = {
-            "Id": list(corpus.values())[i].id,
-            "Title": list(corpus.values())[i].title,
-            "Tweet": list(corpus.values())[i].description,
-            "Date": list(corpus.values())[i].doc_date,
-            "Likes": list(corpus.values())[i].likes,
-            "Retweets": list(corpus.values())[i].retweets,
-            "Url": list(corpus.values())[i].url
-        }
-        corpus_df.loc[len(corpus_df)] = data_to_append
+    if (search_option == "tf-idf"):
+        ranked_tweets = search_tf_idf(query, index, tf, idf)
+    else:
+        corpus_df = pd.DataFrame(columns=["Id", "Title", "Tweet", "Date", "Likes", "Retweets", "Url"])
+        for i in range(len(list(corpus.values()))):
+            data_to_append = {
+                "Id": list(corpus.values())[i].id,
+                "Title": list(corpus.values())[i].title,
+                "Tweet": list(corpus.values())[i].description,
+                "Date": list(corpus.values())[i].doc_date,
+                "Likes": list(corpus.values())[i].likes,
+                "Retweets": list(corpus.values())[i].retweets,
+                "Url": list(corpus.values())[i].url
+            }
+            corpus_df.loc[len(corpus_df)] = data_to_append
         
-    ranked_tweets = our_search(corpus_df, query, index, tf, idf)
-    
+        ranked_tweets = our_search(corpus_df, query, index, tf, idf)
+        
     return ranked_tweets
 
 def create_index(corpus):

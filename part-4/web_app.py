@@ -14,7 +14,9 @@ from myapp.search.load_corpus import load_corpus
 from myapp.search.objects import Document, StatsDocument, Session_IP
 from myapp.search.search_engine import SearchEngine
 from myapp.search.algorithms import create_index
-
+from wordcloud import WordCloud
+import base64
+from io import BytesIO
 
 # *** for using method to_json in objects ***
 def _default(self, obj):
@@ -101,11 +103,12 @@ def search_form_post():
     search_query = request.form['search-query']
     search_queries.append(search_query)
     session['last_search_query'] = search_query
-
+    
     search_id = analytics_data.save_query_terms(search_query)
 
-    results = search_engine.search(search_query, search_id, corpus, index_tf_idf, tf, idf)
-
+    engine_used = request.form['search-option']
+    results = search_engine.search(search_query, search_id, corpus, index_tf_idf, tf, idf, engine_used)
+        
     found_count = len(results)
     session['last_found_count'] = found_count
     
@@ -205,7 +208,13 @@ def session_function():
     user_ip = request.remote_addr
     agent = httpagentparser.detect(user_agent)
     user = Session_IP(user_ip, agent)
-    return render_template('session.html', user=user, history=search_queries)
+    queries = ' '.join(search_queries)
+    wordcloud = WordCloud(background_color='white', colormap='viridis').generate(queries)
+    word_cloud = wordcloud.to_image()
+    buffered = BytesIO()
+    word_cloud.save(buffered, format="PNG")
+    word_cloud = base64.b64encode(buffered.getvalue()).decode()    
+    return render_template('session.html', user=user, history=search_queries, wordcloud=word_cloud)
 
 if __name__ == "__main__":
     app.run(port=8088, host="0.0.0.0", threaded=False, debug=True)

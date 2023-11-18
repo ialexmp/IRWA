@@ -5,11 +5,23 @@
         <p>&nbsp;</p>
         <p>&nbsp;</p>
         <p>&nbsp;</p>
-        <form class="d-flex" method="POST" onSubmit='return validate();' action="/search">
-            <input class="form-control me-2" name="search-query" type="search" placeholder="Search" aria-label="Search"
-                   autofocus="autofocus">
-            <button class="btn btn-primary" type="submit" onclick='this.form.submit();'>Search</button>
-            <input name="upf-irwa-hidden" type="hidden" value="123">
+        <form method="POST" onSubmit='return validate();' action="/search" id="searchForm">
+            <div class="d-flex">
+                <input class="form-control me-2" name="search-query" type="search" placeholder="Search" aria-label="Search"
+                    autofocus="autofocus">
+                <button class="btn btn-primary" type="submit" onclick='this.form.submit();'>Search</button>
+                <input name="upf-irwa-hidden" type="hidden" value="123">
+            </div>
+            <div style="display: flex; justify-content: center;">
+                <div style="padding: 0px 30px;">
+                    <input type="radio" id="tf-idf" name="search-option" value="tf-idf" checked>
+                    <label for="tf-idf">tf-idf</label><br>
+                </div>
+                <div style="padding: 0px 30px;">
+                    <input type="radio" id="our_search" name="search-option" value="our_search">
+                    <label for="our_search">tf-idf+likes+retweets</label><br>
+                </div>
+            </div>
         </form>
         <p>&nbsp;</p>
         <p>&nbsp;</p>

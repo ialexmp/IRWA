@@ -4,9 +4,14 @@
 {% block content %}
 <h5>Session</h5>
     <p style=text-align:center> <b> IP: </b> {{user.ip}} <b> — Platform: </b> {{user.platform}} <b>- Browser: </b> {{user.browser}} </p>
-    <p><b> History:</b> 
+    <p><b> Queries Done:</b> 
     {% for query in history %}
-        {{query}},
+        {% if loop.last %}
+            {{query}}.
+        {% else %}
+            {{query}},
+        {% endif %}
     {% endfor %}
     </p>
+    <img src="data:image/png;base64,{{ wordcloud }}" alt="Wordcloud">
 {% endblock %}

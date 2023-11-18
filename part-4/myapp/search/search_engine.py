@@ -30,13 +30,13 @@ def build_demo_results(corpus: dict, search_id):
 class SearchEngine:
     """educational search engine"""
 
-    def search(self, search_query, search_id, corpus, index, tf, idf):
+    def search(self, search_query, search_id, corpus, index, tf, idf, search_option):
         print("Search query:", search_query)
 
         results = []
         ##### your code here #####
         # results = build_demo_results(corpus, search_id)  # replace with call to search algorithm
-        results = search_in_corpus(corpus, search_query, index, tf, idf)
+        results = search_in_corpus(corpus, search_query, index, tf, idf, search_option)
         
         ##### your code here #####
         documents = []
@@ -49,5 +49,5 @@ class SearchEngine:
                 print(f"Invalid index: {id}")
         
         return [ResultItem(item.id, item.title, item.description, item.doc_date,
-                                "doc_details?id={}&search_id={}&param2=2".format(item.id, search_id), score)
+                                "doc_details?id={}&search_id={}&param2=2".format(item.id, search_id), item.profile_pic, item.username, score)
                         for item, (score, _) in zip(documents, results)]
