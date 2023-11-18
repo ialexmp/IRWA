@@ -8,6 +8,7 @@ from myapp.search.objects import ResultItem, Document
 import re
 import nltk
 from nltk.corpus import stopwords
+import pandas as pd
 
 stemmer = nltk.stem.SnowballStemmer('english')
 custom_stopwords = set(stopwords.words('english'))
@@ -18,7 +19,21 @@ def search_in_corpus(corpus: dict, query, index, tf, idf):
 
     # 2. apply ranking
     ranked_tweets = search_tf_idf(query, index, tf, idf)
-    # ranked_tweets = our_search(corpus, query, index, tf, idf)
+
+    corpus_df = pd.DataFrame(columns=["Id", "Title", "Tweet", "Date", "Likes", "Retweets", "Url"])
+    for i in range(len(list(corpus.values()))):
+        data_to_append = {
+            "Id": list(corpus.values())[i].id,
+            "Title": list(corpus.values())[i].title,
+            "Tweet": list(corpus.values())[i].description,
+            "Date": list(corpus.values())[i].doc_date,
+            "Likes": list(corpus.values())[i].likes,
+            "Retweets": list(corpus.values())[i].retweets,
+            "Url": list(corpus.values())[i].url
+        }
+        corpus_df.loc[len(corpus_df)] = data_to_append
+        
+    ranked_tweets = our_search(corpus_df, query, index, tf, idf)
     
     return ranked_tweets
 
@@ -83,7 +98,7 @@ def rank_tweets(terms, tweets, ourindex, idf, tf):
         print("No results found, try again")
     return tweet_scores
 
-def our_search(corpus, query, index, idf, tf):
+def our_search(corpus, query, index, tf, idf):
     query = preprocess(query)
     tweets = set()
     for each_query in query.split(" "):
@@ -112,15 +127,15 @@ def rank_tweets2(df, terms, tweets, index, idf, tf):
         query_vector[termIndex] =  query_terms_count[term] / query_norm * idf[term]
         for row_tweet, (tweet, postings) in enumerate(index[term]):
             if tweet in tweets:
-                rt = np.log(df["Retweets"][int(tweet.split("_")[1])-1]+1)
-                likes = np.log(df["Likes"][int(tweet.split("_")[1])-1]+1)
+                likes = np.log(df[df["Id"]==tweet]["Likes"]+1).values[0]
+                rt = np.log(df[df["Id"]==tweet]["Retweets"]+1).values[0]
                 tweet_vectors[tweet][termIndex] = tf[term][row_tweet] * idf[term] + (((likes-min_likes)/den_likes*0.15) + ((rt-min_rt)/den_rt* 0.3))
     tweet_scores=[[np.dot(curTweetVec, query_vector), tweet] for tweet, curTweetVec in tweet_vectors.items() ]
     tweet_scores.sort(reverse=True)
     result_tweets = [x[1] for x in tweet_scores]
     if len(result_tweets) == 0:
         print("No results found, try again")
-    return result_tweets
+    return tweet_scores
 
 def preprocess(text):
     # Convert text to lowercase
