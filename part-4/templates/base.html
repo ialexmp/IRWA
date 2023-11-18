@@ -3,6 +3,7 @@
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     {# Using Bootstrap v4.6.1 #}
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.13.0/css/all.css">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ url_for('static',filename='styles/custom.css') }}">
     <style>
@@ -40,11 +41,11 @@
     <hr>
     <div class='content'>
         <div class="navbar">
-            <a href="/">Search</a>
-            <a href="/stats">Stats</a>
-            <a href="/sentiment">Sentiment</a>
-            <a href="/dashboard">Dashboard</a>
-            <a href="/session">Session</i></a>
+            <a href="/">Search <i class="fa fa-search"></i></a>
+            <a href="/stats">Stats <i class="fa fa-calculator"></i></a>
+            <a href="/sentiment">Sentiment <i class="fa fa-smile"></i></a>
+            <a href="/dashboard">Dashboard <i class="fa fa-chart-line"></i></a>
+            <a href="/session">Session <i class="fa fa-info-circle"></i></i></a>
         </div>
         {% block content %}
             base
