@@ -2,6 +2,7 @@ import os
 from json import JSONEncoder
 import json
 import pickle
+import time
 
 # pip install httpagentparser
 import httpagentparser  # for getting the user agent as json
@@ -76,6 +77,7 @@ else:
 
 search_queries = []
 
+start_time = time.time()
 # Home URL "/"
 @app.route('/')
 def index():
@@ -254,6 +256,9 @@ def session_function():
     user_ip = request.remote_addr
     agent = httpagentparser.detect(user_agent)
     user = Session_IP(user_ip, agent)
+    time_now = time.time()
+    total_time = time_now - start_time
+    total_time = round(total_time / 60)
     
     frequency = {}
     for query in search_queries:
@@ -266,9 +271,9 @@ def session_function():
         buffered = BytesIO()
         word_cloud.save(buffered, format="PNG")
         word_cloud = base64.b64encode(buffered.getvalue()).decode()    
-        return render_template('session.html', user=user, history=search_queries, frequency=frequency, wordcloud=word_cloud)
+        return render_template('session.html', user=user, time=total_time, history=search_queries, frequency=frequency, wordcloud=word_cloud)
     else:
-        return render_template('session.html', user=user, history=search_queries, frequency=frequency)
+        return render_template('session.html', user=user, time=total_time, history=search_queries, frequency=frequency)
 
 if __name__ == "__main__":
     app.run(port=8088, host="0.0.0.0", threaded=False, debug=True)

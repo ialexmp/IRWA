@@ -3,7 +3,9 @@
 
 {% block content %}
 <h4>Session</h4>
-    <p style=text-align:center> <b> IP: </b> {{user.ip}} <b> — Platform: </b> {{user.platform}} <b>- Browser: </b> {{user.browser}} </p>
+    <p style=text-align:center> <b> IP: </b> {{user.ip}} <b> — Platform: </b> {{user.platform}} <b> — Browser: </b> {{user.browser}} </p>
+    <p><b>Session Time: </b>{{time}} min </p>
+    <br>
     <p><b> Queries Done:</b> 
     {% for query in history %}
         {% if loop.last %}
@@ -13,7 +15,6 @@
         {% endif %}
     {% endfor %}
     </p>
-    <br>
     <hr>
     <h4>WordCloud </h4>
     {% if wordcloud is defined %}
@@ -22,7 +23,6 @@
         <h6>The WordCloud will be displayed when you search some query.</h6>
     {%endif%}
 
-    <br>
     <hr>
     <h4>Frequency of the queries </h4>
         <!DOCTYPE html>
