@@ -1,3 +1,4 @@
+from math import ceil
 import os
 from json import JSONEncoder
 import json
@@ -77,10 +78,25 @@ else:
 
 search_queries = []
 
+try:
+    with open("sessions.txt", 'r+') as archivo:
+        actual_session = int(archivo.readline().strip())
+        next_session = actual_session + 1
+        archivo.seek(0)
+        archivo.write(str(next_session) + "\n")
+except FileNotFoundError:
+    actual_session = 0
+    next_session = actual_session
+    with open("sessions.txt", 'w') as archivo:
+        archivo.write(str(next_session) + "\n")
+        
 start_time = time.time()
+
+val_session = actual_session
 # Home URL "/"
 @app.route('/')
 def index():
+    global val_session
     print("starting home url /...")
 
     # flask server creates a session by persisting a cookie in the user's browser.
@@ -92,6 +108,12 @@ def index():
 
     user_ip = request.remote_addr
     agent = httpagentparser.detect(user_agent)
+    
+    if(val_session == actual_session):
+        with open("sessions.txt", 'a') as archivo:
+            archivo.write(user_ip + ";" + agent["platform"]["name"] + " " + agent["platform"]["version"] + ";" + agent["browser"]["name"] + '\n')
+        
+    val_session = val_session + 1    
 
     print("Remote IP: {} - JSON user browser {}".format(user_ip, agent))
 
@@ -260,6 +282,16 @@ def session_function():
     total_time = time_now - start_time
     total_time = round(total_time / 60)
     
+    sessions = []
+    with open("sessions.txt", 'r') as archivo:
+        all_session = archivo.readlines()
+        if len(all_session) >= 2:
+            sessions.append(all_session[-1].strip())
+            for s in reversed(all_session[1:-1]):
+                sessions.append(s.strip())
+
+    print(sessions)
+    
     frequency = {}
     for query in search_queries:
         frequency[query] = frequency.get(query, 0) + 1
@@ -271,9 +303,9 @@ def session_function():
         buffered = BytesIO()
         word_cloud.save(buffered, format="PNG")
         word_cloud = base64.b64encode(buffered.getvalue()).decode()    
-        return render_template('session.html', user=user, time=total_time, history=search_queries, frequency=frequency, wordcloud=word_cloud)
+        return render_template('session.html', user=user, time=total_time, sessions=sessions, history=search_queries, frequency=frequency, wordcloud=word_cloud)
     else:
-        return render_template('session.html', user=user, time=total_time, history=search_queries, frequency=frequency)
+        return render_template('session.html', user=user, time=total_time, sessions=sessions, history=search_queries, frequency=frequency)
 
 if __name__ == "__main__":
     app.run(port=8088, host="0.0.0.0", threaded=False, debug=True)
