@@ -47,6 +47,10 @@
             <a href="/dashboard">Dashboard <i class="fa fa-chart-line"></i></a>
             <a href="/session">Session <i class="fa fa-info-circle"></i></i></a>
         </div>
+        <div class="container" style=text-align:right>
+            <label for="toggleSwitch">Dark mode:</label>
+            <input type="checkbox" id="dark-mode-btn">
+        </div>
         {% block content %}
             base
         {% endblock %}
@@ -54,5 +58,36 @@
     <hr>
     <div class='centered'> 24952 - Information Retrieval and Web Analytics</div>
 </div>
+
+<script>
+    function toggleDarkMode() {
+        const body = document.body;
+        body.classList.toggle('dark-mode');
+        body.classList.toggle('light-mode');
+    }
+    
+    function applySavedMode() {
+        const savedMode = localStorage.getItem('modo');
+        const checkbox = document.getElementById('dark-mode-btn');
+        
+        if (savedMode === 'dark') {
+            document.body.classList.add('dark-mode');
+            checkbox.checked = true;
+        } else {
+            document.body.classList.remove('dark-mode');
+            checkbox.checked = false;
+        }
+
+    }
+    
+    const modoOscuroBtn = document.getElementById('dark-mode-btn');
+    modoOscuroBtn.addEventListener('click', () => {
+        toggleDarkMode();
+        const modoActual = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
+        localStorage.setItem('modo', modoActual);
+    });
+      
+    applySavedMode();
+</script>
 </body>
 </html>

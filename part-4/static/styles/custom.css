@@ -1,9 +1,17 @@
+body.light-mode {
+    background-color: #ffffff;
+}
+
+body.dark-mode {
+    background-color: #333333;
+    color: #ffffff;
+}
+
 .container {
     max-width: 800px;
     padding-top: 10px;
     position: relative;
     font-family: 'Helvetica Neue', sans-serif;
-    color: #404246;
 }
 
 .centered {
