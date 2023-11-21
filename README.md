@@ -34,4 +34,7 @@ Additionally, we experimented with Word2Vec embeddings, leveraging semantic unde
 The results of these studies can be observed [here](https://github.com/ialexmp/IRWA/blob/master/part-3/IRWA-2023-u189626-u186665-u186661-part-3.pdf).
 
 ### Part 4: 
-[In process...]
+
+Our project delivers an intuitive search engine interface with refined result displays, including user-friendly features like a navigation bar, session insights, emotional analysis, and a Light/Dark mode. We optimize performance by persistently storing the index for faster loads. On the analytics front, we offer dynamic showcases of user interactions, an intuitive dashboard for document clicks, sentiment analysis, and insightful visualizations of searched queries. Session details, including IP and engagement duration, are captured and saved, enriching user experience. These implementations collectively prioritize user-centric interaction and provide robust analytics for understanding user behavior within the search engine.
+
+Detailed information about this section and the final results is accessible [here](https://github.com/ialexmp/IRWA/blob/master/part-4/IRWA-2023-u189626-u186665-u186661-part-4.pdf).
